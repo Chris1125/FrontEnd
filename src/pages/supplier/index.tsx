@@ -1,12 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
-import {
-  FooterToolbar,
-  PageContainer,
-  ProDescriptions,
-  ProTable,
-} from '@ant-design/pro-components';
-import { Button, Drawer, Input, message } from 'antd';
+import { PageContainer, ProDescriptions, ProTable } from '@ant-design/pro-components';
+import { Button, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
@@ -18,9 +13,8 @@ import { pageList, updateOrder } from './service';
  *
  * @param fields
  */
-
 const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) => {
-  const hide = message.loading('正在配置');
+  const hide = message.loading('正在修改');
 
   try {
     await updateOrder({
@@ -28,78 +22,58 @@ const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) =
       ...fields,
     });
     hide();
-    message.success('配置成功');
+    message.success('修改成功');
     return true;
   } catch (error) {
     hide();
-    message.error('配置失败请重试！');
+    message.error('修改失败请重试！');
     return false;
   }
 };
 
 const TableList: React.FC = () => {
-  /** 新建窗口的弹窗 */
   const [handleModalVisible] = useState<boolean>(false);
-  /** 分布更新窗口的弹窗 */
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<TableListItem>();
   const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
-  /** 国际化配置 */
 
   const columns: ProColumns<TableListItem>[] = [
     {
-      title: '订单编号',
-      dataIndex: 'orderNo',
-      render: (dom, entity) => {
-        return (
-          <a
-            onClick={() => {
-              // setCurrentRow(entity);
-              // setShowDetail(true);
-            }}
-          >
-            {dom}
-          </a>
-        );
-      },
+      title: '供应商名称',
+      dataIndex: 'supplierName',
     },
     {
-      title: '下单时间',
+      title: '供应商代码',
+      dataIndex: 'supplierCode',
+    },
+    {
+      title: '创建时间',
       dataIndex: 'createTime',
+      valueType: 'text',
       sorter: true,
+      search: false,
     },
     {
-      title: '下单人',
-      dataIndex: 'buyerName',
+      title: '修改时间',
+      dataIndex: 'updateTime',
       valueType: 'text',
+      sorter: true,
+      search: false,
     },
     {
-      title: '下单人手机号',
-      dataIndex: 'buyerPhone',
+      title: '状态',
+      dataIndex: 'status',
       valueType: 'text',
-    },
-    {
-      title: '订单状态',
-      dataIndex: 'orderStatus',
-      hideInForm: true,
       valueEnum: {
         0: {
-          text: '关闭',
-          status: 'Default',
+          text: '停用',
+          status: '0',
         },
         1: {
-          text: '运行中',
-          status: 'Processing',
-        },
-        2: {
-          text: '已上线',
-          status: 'Success',
-        },
-        3: {
-          text: '异常',
-          status: 'Error',
+          text: '正常',
+          status: '1',
         },
       },
     },
@@ -108,26 +82,33 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <a
-          key="config"
-          onClick={() => {
-            // handleUpdateModalVisible(true);
-            setCurrentRow(record);
-          }}
-        >
-          配置
-        </a>,
-        <a key="subscribeAlert" href="">
-          订阅警报
-        </a>,
+        record.status === 0 ? (
+          <a
+            key="enable"
+            onClick={() => {
+              setCurrentRow(record);
+            }}
+          >
+            启用
+          </a>
+        ) : (
+          <a
+            key="enable"
+            onClick={() => {
+              setCurrentRow(record);
+            }}
+          >
+            停用
+          </a>
+        ),
       ],
     },
-  ]
+  ];
 
   return (
     <PageContainer>
       <ProTable<TableListItem, TableListPagination>
-        headerTitle="查询表格"
+        headerTitle=""
         actionRef={actionRef}
         rowKey="key"
         search={{
@@ -138,7 +119,7 @@ const TableList: React.FC = () => {
             type="primary"
             key="primary"
             onClick={() => {
-              // handleModalVisible(true);
+              handleModalVisible(true);
             }}
           >
             <PlusOutlined /> 新建
@@ -146,43 +127,7 @@ const TableList: React.FC = () => {
         ]}
         request={pageList}
         columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
-        }}
       />
-      {selectedRowsState?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              已选择{' '}
-              <a
-                style={{
-                  fontWeight: 600,
-                }}
-              >
-                {selectedRowsState.length}
-              </a>{' '}
-              项 &nbsp;&nbsp;
-              <span>
-                服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.orderNo!, 0)} 万
-              </span>
-            </div>
-          }
-        >
-          <Button
-            onClick={async () => {
-              // await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量删除
-          </Button>
-          <Button type="primary">批量审批</Button>
-        </FooterToolbar>
-      )}
       <UpdateForm
         onSubmit={async (value) => {
           const success = await handleUpdate(value, currentRow);
@@ -213,15 +158,15 @@ const TableList: React.FC = () => {
         }}
         closable={false}
       >
-        {currentRow?.orderNo && (
+        {currentRow?.id && (
           <ProDescriptions<TableListItem>
             column={2}
-            title={currentRow?.orderNo}
+            title={currentRow?.id}
             request={async () => ({
               data: currentRow || {},
             })}
             params={{
-              id: currentRow?.orderNo,
+              id: currentRow?.id,
             }}
             columns={columns as ProDescriptionsItemProps<TableListItem>[]}
           />

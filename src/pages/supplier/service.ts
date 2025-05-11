@@ -5,7 +5,7 @@ export async function pageList(
   params: { current?: number; pageSize?: number },
   options?: { [key: string]: any },
 ) {
-  return request('/suppliers', {
+  return request('/supplier/list', {
     params,
     method: 'GET',
     ...(options || {}),

@@ -1,7 +1,7 @@
 import { pageList } from './service';
 
 export default {
-  namespace: 'order',
+  namespace: 'supplier',
   state: {
     list: [],
     pagination: {},
@@ -9,7 +9,6 @@ export default {
   effects: {
     *pageList({ payload }, { call, put }) {
       const response = yield call(pageList, payload);
-      console.log('111' + response);
       yield put({
         type: 'updateState',
         payload: {

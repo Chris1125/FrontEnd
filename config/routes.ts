@@ -41,29 +41,30 @@ export default [
       },
     ],
   },
-  {
-    name: '订单管理',
-    icon: 'shopping',
-    // icon: 'orderedListOutlined',
-    path: '/orders',
-    component: './order/list',
-  },
+
   {
     name: '供应商管理',
     icon: 'shop',
-    path: '/suppliers',
+    path: '/supplier',
     component: './supplier',
   },
   {
     name: '商品管理',
     icon: 'skin',
-    path: '/goods',
-    component: './goods',
+    path: '/product',
+    component: './product',
+  },
+  {
+    name: '订单管理',
+    icon: 'shopping',
+    // icon: 'orderedListOutlined',
+    path: '/order',
+    component: './order/list',
   },
   {
     name: '用户管理',
     icon: 'user',
-    path: '/users',
+    path: '/user',
     component: './user/management',
   },
   {

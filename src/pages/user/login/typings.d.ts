@@ -9,9 +9,10 @@ declare namespace USER {
   };
 
   type LoginResult = {
-    status: string;
+    success: boolean;
     data: {
       token: string;
+      userId: number;
     };
   };
 

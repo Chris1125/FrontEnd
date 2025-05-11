@@ -5,9 +5,7 @@ export async function pageList(
   params: { current?: number; pageSize?: number },
   options?: { [key: string]: any },
 ) {
-  console.log(params)
-  console.log(options)
-  return request('/orders', {
+  return request('/order/list', {
     params,
     method: 'GET',
     ...(options || {}),
@@ -16,13 +14,13 @@ export async function pageList(
     return {
       data: d.records,
       total: d.total,
-      success: true,
+      success: d.success,
     };
   });
 }
 
 export async function updateOrder(data: { [key: string]: any }, options?: { [key: string]: any }) {
-  return request<TableListItem>('/orders/update', {
+  return request<TableListItem>('/order/update', {
     data,
     method: 'PUT',
     ...(options || {}),

@@ -5,7 +5,7 @@ export async function pageList(
   params: { current?: number; pageSize?: number },
   options?: { [key: string]: any },
 ) {
-  return request('/goods', {
+  return request('/product', {
     params,
     method: 'GET',
     ...(options || {}),
@@ -20,7 +20,7 @@ export async function pageList(
 }
 
 export async function addGoods(data: { [key: string]: any }, options?: { [key: string]: any }) {
-  return request<TableListItem>('/goods/', {
+  return request<TableListItem>('/product/', {
     data,
     method: 'POST',
     ...(options || {}),
@@ -28,7 +28,7 @@ export async function addGoods(data: { [key: string]: any }, options?: { [key: s
 }
 
 export async function updateGoods(data: { [key: string]: any }, options?: { [key: string]: any }) {
-  return request<TableListItem>('/goods/', {
+  return request<TableListItem>('/product/', {
     data,
     method: 'PUT',
     ...(options || {}),
@@ -36,7 +36,7 @@ export async function updateGoods(data: { [key: string]: any }, options?: { [key
 }
 
 export async function deleteGoods(data: { [key: string]: any }, options?: { [key: string]: any }) {
-  return request<TableListItem>('/goods/', {
+  return request<TableListItem>('/product/', {
     data,
     method: 'PUT',
     ...(options || {}),
