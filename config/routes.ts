@@ -41,12 +41,23 @@ export default [
       },
     ],
   },
-
   {
     name: '供应商管理',
     icon: 'shop',
     path: '/supplier',
-    component: './supplier',
+    // component: './supplier/list',
+    routes: [
+      {
+        name: '供应商列表',
+        path: '/supplier/list',
+        component: './supplier/list',
+      },
+      {
+        name: '账号列表',
+        path: '/supplier/account',
+        component: './supplier/account',
+      },
+    ],
   },
   {
     name: '商品管理',
@@ -64,7 +75,7 @@ export default [
   {
     name: '用户管理',
     icon: 'user',
-    path: '/user',
+    path: '/user/management',
     component: './user/management',
   },
   {

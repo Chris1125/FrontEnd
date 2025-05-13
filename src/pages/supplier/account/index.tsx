@@ -1,12 +1,12 @@
-import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { PageContainer, ProDescriptions, ProTable } from '@ant-design/pro-components';
-import { Button, Drawer, message } from 'antd';
+import { Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
+import CreateForm from './components/CreateForm';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
 import type { TableListItem, TableListPagination } from './data';
-import { pageList, updateOrder } from './service';
+import { pageList, updateSupplierAccount } from './service';
 
 /**
  * 更新节点
@@ -17,7 +17,7 @@ const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) =
   const hide = message.loading('正在修改');
 
   try {
-    await updateOrder({
+    await updateSupplierAccount({
       ...currentRow,
       ...fields,
     });
@@ -32,7 +32,7 @@ const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) =
 };
 
 const TableList: React.FC = () => {
-  const [handleModalVisible] = useState<boolean>(false);
+  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
@@ -41,26 +41,27 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<TableListItem>[] = [
     {
+      title: '供应商 ID',
+      dataIndex: 'supplierId',
+      hideInTable: true,
+      search: false,
+    },
+    {
       title: '供应商名称',
       dataIndex: 'supplierName',
     },
     {
-      title: '供应商代码',
-      dataIndex: 'supplierCode',
+      title: '账号',
+      dataIndex: 'account',
     },
     {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      valueType: 'text',
-      sorter: true,
+      title: '密码',
+      dataIndex: 'password',
       search: false,
     },
     {
-      title: '修改时间',
-      dataIndex: 'updateTime',
-      valueType: 'text',
-      sorter: true,
-      search: false,
+      title: '同步订单',
+      dataIndex: 'isSync',
     },
     {
       title: '状态',
@@ -76,6 +77,20 @@ const TableList: React.FC = () => {
           status: '1',
         },
       },
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      valueType: 'text',
+      sorter: true,
+      search: false,
+    },
+    {
+      title: '修改时间',
+      dataIndex: 'updateTime',
+      valueType: 'text',
+      sorter: true,
+      search: false,
     },
     {
       title: '操作',
@@ -114,20 +129,11 @@ const TableList: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              handleModalVisible(true);
-            }}
-          >
-            <PlusOutlined /> 新建
-          </Button>,
-        ]}
+        toolBarRender={() => [<CreateForm key="create" reload={actionRef.current?.reload} />]}
         request={pageList}
         columns={columns}
       />
+
       <UpdateForm
         onSubmit={async (value) => {
           const success = await handleUpdate(value, currentRow);
