@@ -5,7 +5,7 @@ export async function pageList(
   params: { current?: number; pageSize?: number },
   options?: { [key: string]: any },
 ) {
-  return request('/api/order', {
+  return request('/user/list', {
     params,
     method: 'GET',
     ...(options || {}),
@@ -19,8 +19,27 @@ export async function pageList(
   });
 }
 
+export interface UserAddParams {
+  account: string;
+  password: string;
+  username: string;
+  mobile: string;
+}
+
+export async function add(data: UserAddParams, options?: { [key: string]: any }) {
+  return request('/user/add', {
+    data,
+    method: 'POST',
+    ...(options || {}),
+    requestInterceptors: [],
+  }).then(function (response) {
+    console.log('addSupplier', response);
+    return { data: response };
+  });
+}
+
 export async function updateOrder(data: { [key: string]: any }, options?: { [key: string]: any }) {
-  return request<TableListItem>('/order/update', {
+  return request<TableListItem>('/user/update', {
     data,
     method: 'PUT',
     ...(options || {}),

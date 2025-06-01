@@ -12,7 +12,6 @@ import type { TableListItem, TableListPagination } from './data';
 import { pageList, updateSupplier } from './service';
 import CreateForm from './components/CreateForm';
 
-
 /**
  * 更新节点
  *

@@ -1,12 +1,11 @@
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import {
-  FooterToolbar,
   PageContainer,
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Drawer, Input, message } from 'antd';
+import { Button, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
@@ -51,6 +50,8 @@ const TableList: React.FC = () => {
     {
       title: '订单编号',
       dataIndex: 'orderNo',
+      hideInTable: true,
+      search: false,
       render: (dom, entity) => {
         return (
           <a
@@ -65,40 +66,27 @@ const TableList: React.FC = () => {
       },
     },
     {
-      title: '下单时间',
-      dataIndex: 'createTime',
+      title: '登录账号',
+      dataIndex: 'account',
       sorter: true,
     },
     {
-      title: '下单人',
-      dataIndex: 'buyerName',
+      title: '用户名称',
+      dataIndex: 'userName',
       valueType: 'text',
     },
     {
-      title: '下单人手机号',
-      dataIndex: 'buyerPhone',
+      title: '状态',
+      dataIndex: 'status',
       valueType: 'text',
-    },
-    {
-      title: '订单状态',
-      dataIndex: 'orderStatus',
-      hideInForm: true,
       valueEnum: {
         0: {
-          text: '关闭',
-          status: 'Default',
+          text: '停用',
+          status: '0',
         },
         1: {
-          text: '运行中',
-          status: 'Processing',
-        },
-        2: {
-          text: '已上线',
-          status: 'Success',
-        },
-        3: {
-          text: '异常',
-          status: 'Error',
+          text: '正常',
+          status: '1',
         },
       },
     },
@@ -107,18 +95,25 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <a
-          key="config"
-          onClick={() => {
-            // handleUpdateModalVisible(true);
-            setCurrentRow(record);
-          }}
-        >
-          配置
-        </a>,
-        <a key="subscribeAlert" href="">
-          订阅警报
-        </a>,
+        record.status === 0 ? (
+          <a
+            key="enable"
+            onClick={() => {
+              setCurrentRow(record);
+            }}
+          >
+            启用
+          </a>
+        ) : (
+          <a
+            key="enable"
+            onClick={() => {
+              setCurrentRow(record);
+            }}
+          >
+            停用
+          </a>
+        ),
       ],
     },
   ]
@@ -151,37 +146,6 @@ const TableList: React.FC = () => {
           },
         }}
       />
-      {selectedRowsState?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              已选择{' '}
-              <a
-                style={{
-                  fontWeight: 600,
-                }}
-              >
-                {selectedRowsState.length}
-              </a>{' '}
-              项 &nbsp;&nbsp;
-              <span>
-                服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.orderNo!, 0)} 万
-              </span>
-            </div>
-          }
-        >
-          <Button
-            onClick={async () => {
-              // await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量删除
-          </Button>
-          <Button type="primary">批量审批</Button>
-        </FooterToolbar>
-      )}
       <UpdateForm
         onSubmit={async (value) => {
           const success = await handleUpdate(value, currentRow);

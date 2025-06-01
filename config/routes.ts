@@ -68,9 +68,21 @@ export default [
   {
     name: '订单管理',
     icon: 'shopping',
-    // icon: 'orderedListOutlined',
     path: '/order',
-    component: './order/list',
+    // component: './order/list',
+    routes: [
+      {
+        name: '订单列表',
+        path: '/order/list',
+        component: './order/list',
+      },
+      {
+        name: '订单详情',
+        path: '/order/detail',
+        hideInMenu: true,
+        component: './order/detail',
+      },
+    ],
   },
   {
     name: '用户管理',

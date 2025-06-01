@@ -18,14 +18,35 @@ export type TableListParams = {
 };
 
 export type TableListPageItem = {
-  current:number;
+  current: number;
   pageSize: number;
   total: number;
   datas: TableListItem[];
 };
 
+export type ProductListResponse = {
+  productName: string;
+  packingUnit: string;
+  quantity: number;
+};
+
 export type TableListItem = {
-  id:number;
+  id: number;
   orderNo: number;
-  createTime: string;
+  buyerName: string;
+  consignee: string;
+  consigneeMobile: string;
+  consigneeAddress: string;
+  supplierId: number;
+  productList: Array[ProductListResponse];
+};
+
+export type DetailItem = {
+  id: number;
+  orderNo: number;
+  // buyerName: string;
+  // consignee: string;
+  // consigneeMobile: string;
+  // consigneeAddress: string;
+  // supplierId: number;
 };

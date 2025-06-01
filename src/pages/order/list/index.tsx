@@ -1,13 +1,8 @@
-import { SyncOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
-import {
-  FooterToolbar,
-  PageContainer,
-  ProDescriptions,
-  ProTable,
-} from '@ant-design/pro-components';
-import { Button, Drawer, message } from 'antd';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { FooterToolbar, PageContainer, ProTable } from '@ant-design/pro-components';
+import { Button, message } from 'antd';
 import React, { useRef, useState } from 'react';
+import DetailDrawer from './components/Drawer';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
 import type { TableListItem, TableListPagination } from './data';
@@ -32,11 +27,9 @@ const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) =
 };
 
 const TableList: React.FC = () => {
-  /** 新建窗口的弹窗 */
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
-  /** 分布更新窗口的弹窗 */
+  const [detailVisiable, setDetailVisiable] = useState<boolean>(false);
+  const [currentOrderId, setCurrentOrderId] = useState<number | undefined>(undefined);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
-  const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<TableListItem>();
   const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
@@ -46,12 +39,13 @@ const TableList: React.FC = () => {
     {
       title: '订单编号',
       dataIndex: 'orderNo',
+      fixed: 'left',
       render: (dom, entity) => {
         return (
           <a
             onClick={() => {
-              // setCurrentRow(entity);
-              // setShowDetail(true);
+              setCurrentOrderId(entity.id);
+              setDetailVisiable(true);
             }}
           >
             {dom}
@@ -61,46 +55,61 @@ const TableList: React.FC = () => {
     },
     {
       title: '下单时间',
-      dataIndex: 'createTime',
+      dataIndex: 'sourceCreateTime',
+      width: 180,
       sorter: true,
+    },
+    {
+      title: '商品',
+      dataIndex: 'productList',
+      width: 360,
+      render: (_, record) => {
+        return (
+          <div>
+            {record.productList?.map((item) => (
+              <div key={item.id}>
+                {item.productName}【{item.quantity} {item.packingUnit}】
+              </div>
+            ))}
+          </div>
+        );
+      },
     },
     {
       title: '下单人',
       dataIndex: 'buyerName',
       valueType: 'text',
+      width: 120,
     },
     {
-      title: '下单人手机号',
-      dataIndex: 'buyerPhone',
+      title: '收货人',
+      dataIndex: 'consignee',
       valueType: 'text',
+      width: 120,
     },
     {
-      title: '订单状态',
-      dataIndex: 'orderStatus',
-      hideInForm: true,
-      valueEnum: {
-        0: {
-          text: '关闭',
-          status: 'Default',
-        },
-        1: {
-          text: '运行中',
-          status: 'Processing',
-        },
-        2: {
-          text: '已上线',
-          status: 'Success',
-        },
-        3: {
-          text: '异常',
-          status: 'Error',
-        },
-      },
+      title: '收货人手机号',
+      dataIndex: 'consigneeMobile',
+      valueType: 'text',
+      width: 180,
+    },
+    {
+      title: '收货人地址',
+      dataIndex: 'consigneeAddress',
+      valueType: 'text',
+      width: 320,
+    },
+    {
+      title: '所属供应商',
+      dataIndex: 'supplierId',
+      valueType: 'text',
+      width: 120,
     },
     {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
+      width: 60,
       render: (_, record) => [
         <a
           key="config"
@@ -124,17 +133,6 @@ const TableList: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              // handleModalVisible(true);
-            }}
-          >
-            <SyncOutlined /> 同步订单
-          </Button>,
-        ]}
         request={pageList}
         columns={columns}
         rowSelection={{
@@ -142,6 +140,7 @@ const TableList: React.FC = () => {
             setSelectedRows(selectedRows);
           },
         }}
+        scroll={{ x: 1200 }}
       />
       {selectedRowsState?.length > 0 && (
         <FooterToolbar
@@ -162,7 +161,6 @@ const TableList: React.FC = () => {
           <Button
             type="primary"
             onClick={async () => {
-              // await handleRemove(selectedRowsState);
               setSelectedRows([]);
               actionRef.current?.reloadAndRest?.();
             }}
@@ -192,29 +190,11 @@ const TableList: React.FC = () => {
         values={currentRow || {}}
       />
 
-      <Drawer
-        width={600}
-        open={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
-        }}
-        closable={false}
-      >
-        {currentRow?.orderNo && (
-          <ProDescriptions<TableListItem>
-            column={2}
-            title={currentRow?.orderNo}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.orderNo,
-            }}
-            columns={columns as ProDescriptionsItemProps<TableListItem>[]}
-          />
-        )}
-      </Drawer>
+      <DetailDrawer
+        visible={detailVisiable}
+        orderId={currentOrderId}
+        onClose={() => setDetailVisiable(false)}>
+      </DetailDrawer>
     </PageContainer>
   );
 };

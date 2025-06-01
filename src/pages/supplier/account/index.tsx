@@ -49,6 +49,7 @@ const TableList: React.FC = () => {
     {
       title: '供应商名称',
       dataIndex: 'supplierName',
+      search: false,
     },
     {
       title: '账号',
@@ -62,6 +63,7 @@ const TableList: React.FC = () => {
     {
       title: '同步订单',
       dataIndex: 'isSync',
+      search: false,
     },
     {
       title: '状态',

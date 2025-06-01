@@ -5,7 +5,7 @@ export async function pageList(
   params: { current?: number; pageSize?: number },
   options?: { [key: string]: any },
 ) {
-  return request('/product', {
+  return request('/product/list', {
     params,
     method: 'GET',
     ...(options || {}),
@@ -14,12 +14,11 @@ export async function pageList(
     return {
       data: d.records,
       total: d.total,
-      success: true,
     };
   });
 }
 
-export async function addGoods(data: { [key: string]: any }, options?: { [key: string]: any }) {
+export async function add(data: { [key: string]: any }, options?: { [key: string]: any }) {
   return request<TableListItem>('/product/', {
     data,
     method: 'POST',
@@ -27,7 +26,7 @@ export async function addGoods(data: { [key: string]: any }, options?: { [key: s
   });
 }
 
-export async function updateGoods(data: { [key: string]: any }, options?: { [key: string]: any }) {
+export async function update(data: { [key: string]: any }, options?: { [key: string]: any }) {
   return request<TableListItem>('/product/', {
     data,
     method: 'PUT',
@@ -35,7 +34,7 @@ export async function updateGoods(data: { [key: string]: any }, options?: { [key
   });
 }
 
-export async function deleteGoods(data: { [key: string]: any }, options?: { [key: string]: any }) {
+export async function remove(data: { [key: string]: any }, options?: { [key: string]: any }) {
   return request<TableListItem>('/product/', {
     data,
     method: 'PUT',

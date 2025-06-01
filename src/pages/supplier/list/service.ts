@@ -14,7 +14,7 @@ export async function pageList(
     return {
       data: d.records,
       total: d.total,
-      success: true,
+      success: response.success,
     };
   });
 }

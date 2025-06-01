@@ -18,14 +18,16 @@ export type TableListParams = {
 };
 
 export type TableListPageItem = {
-  current:number;
+  current: number;
   pageSize: number;
   total: number;
   datas: TableListItem[];
 };
 
 export type TableListItem = {
-  id:number;
-  name: number;
-  unitPrice: string;
+  id: number;
+  name: string;
+  code: string;
+  price: number;
+  releaseTime: string;
 };

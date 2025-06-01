@@ -26,3 +26,10 @@ export async function updateOrder(data: { [key: string]: any }, options?: { [key
     ...(options || {}),
   });
 }
+
+export async function detail(id: number, options?: { [key: string]: any }) {
+  return request('/order/detail/' + id, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

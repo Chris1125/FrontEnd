@@ -11,24 +11,10 @@ import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
 import type { TableListItem, TableListPagination } from './data';
-import { pageList, updateGoods } from './service';
+import { pageList } from './service';
 
 const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) => {
-  const hide = message.loading('正在分配订单');
-
-  try {
-    await updateGoods({
-      ...currentRow,
-      ...fields,
-    });
-    hide();
-    message.success('分配成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('分配失败请重试！');
-    return false;
-  }
+  return true;
 };
 
 const TableList: React.FC = () => {
@@ -44,8 +30,8 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<TableListItem>[] = [
     {
-      title: '订单编号',
-      dataIndex: 'orderNo',
+      title: '商品名称',
+      dataIndex: 'productName',
       render: (dom, entity) => {
         return (
           <a
@@ -60,42 +46,24 @@ const TableList: React.FC = () => {
       },
     },
     {
-      title: '下单时间',
-      dataIndex: 'createTime',
+      title: '商品编码',
+      dataIndex: 'productCode',
       sorter: true,
     },
     {
-      title: '下单人',
-      dataIndex: 'buyerName',
+      title: '价格',
+      dataIndex: 'price',
       valueType: 'text',
     },
     {
-      title: '下单人手机号',
-      dataIndex: 'buyerPhone',
+      title: '库存',
+      dataIndex: 'stock',
       valueType: 'text',
     },
     {
-      title: '订单状态',
-      dataIndex: 'orderStatus',
-      hideInForm: true,
-      valueEnum: {
-        0: {
-          text: '关闭',
-          status: 'Default',
-        },
-        1: {
-          text: '运行中',
-          status: 'Processing',
-        },
-        2: {
-          text: '已上线',
-          status: 'Success',
-        },
-        3: {
-          text: '异常',
-          status: 'Error',
-        },
-      },
+      title: '发布时间',
+      dataIndex: 'releaseTime',
+      valueType: 'text',
     },
     {
       title: '操作',
@@ -105,11 +73,11 @@ const TableList: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            handleUpdateModalVisible(true);
-            setCurrentRow(record);
+            // handleUpdateModalVisible(true);
+            // setCurrentRow(record);
           }}
         >
-          分配
+          下架
         </a>,
       ],
     },
@@ -159,17 +127,6 @@ const TableList: React.FC = () => {
             </div>
           }
         >
-          <Button>批量删除</Button>
-          <Button
-            type="primary"
-            onClick={async () => {
-              // await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量分配
-          </Button>
         </FooterToolbar>
       )}
       <UpdateForm
@@ -202,15 +159,15 @@ const TableList: React.FC = () => {
         }}
         closable={false}
       >
-        {currentRow?.orderNo && (
+        {currentRow?.id && (
           <ProDescriptions<TableListItem>
             column={2}
-            title={currentRow?.orderNo}
+            title={currentRow?.id}
             request={async () => ({
               data: currentRow || {},
             })}
             params={{
-              id: currentRow?.orderNo,
+              id: currentRow?.id,
             }}
             columns={columns as ProDescriptionsItemProps<TableListItem>[]}
           />
