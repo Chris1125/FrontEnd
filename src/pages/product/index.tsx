@@ -1,4 +1,3 @@
-import { SyncOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import {
   FooterToolbar,
@@ -6,7 +5,7 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Drawer, message } from 'antd';
+import { Drawer } from 'antd';
 import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
@@ -56,6 +55,11 @@ const TableList: React.FC = () => {
       valueType: 'text',
     },
     {
+      title: '包装单位',
+      dataIndex: 'packingUnit',
+      valueType: 'text',
+    },
+    {
       title: '库存',
       dataIndex: 'stock',
       valueType: 'text',
@@ -92,43 +96,15 @@ const TableList: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              // handleModalVisible(true);
-            }}
-          >
-            <SyncOutlined /> 同步商品
-          </Button>,
-        ]}
+        toolBarRender={() => []}
         request={pageList}
         columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
-        }}
+        // rowSelection={{
+        //   onChange: (_, selectedRows) => {
+        //     setSelectedRows(selectedRows);
+        //   },
+        // }}
       />
-      {selectedRowsState?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              已选择{' '}
-              <a
-                style={{
-                  fontWeight: 600,
-                }}
-              >
-                {selectedRowsState.length}
-              </a>{' '}
-              项 &nbsp;&nbsp;
-            </div>
-          }
-        >
-        </FooterToolbar>
-      )}
       <UpdateForm
         onSubmit={async (value) => {
           const success = await handleUpdate(value, currentRow);

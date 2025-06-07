@@ -20,20 +20,20 @@ export async function pageList(
 }
 
 export interface UserAddParams {
-  account: string;
-  password: string;
   username: string;
+  password: string;
+  name: string;
   mobile: string;
 }
 
 export async function add(data: UserAddParams, options?: { [key: string]: any }) {
+  console.log("addUser: ", data)
   return request('/user/add', {
     data,
     method: 'POST',
     ...(options || {}),
     requestInterceptors: [],
   }).then(function (response) {
-    console.log('addSupplier', response);
     return { data: response };
   });
 }

@@ -16,7 +16,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
   const { run, loading } = useRequest(addSupplierAccount, {
     manual: true,
     onSuccess: (data) => {
-      console.log('successData --- ', JSON.stringify(data));
       messageApi.success(data.msg)
       reload?.();
     },
@@ -55,7 +54,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           width="md"
         />
         <ProFormText
-          label="供应商代码"
+          label="供应商代码111"
           name="supplierCode"
           rules={[
             {
@@ -65,17 +64,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           ]}
           width="md"
         />
-        {/* <ProFormText
-          label="供应商ID"
-          name="supplierId"
-          rules={[
-            {
-              required: true,
-              message: '供应商ID为必填项',
-            },
-          ]}
-          width="md"
-        /> */}
       </ModalForm>
     </>
   );

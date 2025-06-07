@@ -39,6 +39,7 @@ const TableList: React.FC = () => {
     {
       title: '订单编号',
       dataIndex: 'orderNo',
+      width: 240,
       fixed: 'left',
       render: (dom, entity) => {
         return (
@@ -56,7 +57,7 @@ const TableList: React.FC = () => {
     {
       title: '下单时间',
       dataIndex: 'sourceCreateTime',
-      width: 180,
+      width: 200,
       sorter: true,
     },
     {
@@ -79,37 +80,37 @@ const TableList: React.FC = () => {
       title: '下单人',
       dataIndex: 'buyerName',
       valueType: 'text',
-      width: 120,
+      width: 160,
     },
     {
       title: '收货人',
       dataIndex: 'consignee',
       valueType: 'text',
-      width: 120,
+      width: 80,
     },
     {
       title: '收货人手机号',
       dataIndex: 'consigneeMobile',
       valueType: 'text',
-      width: 180,
+      width: 120,
     },
     {
       title: '收货人地址',
       dataIndex: 'consigneeAddress',
       valueType: 'text',
-      width: 320,
+      width: 280,
     },
     {
       title: '所属供应商',
       dataIndex: 'supplierId',
       valueType: 'text',
-      width: 120,
+      width: 160,
     },
     {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      width: 60,
+      width: 80,
       render: (_, record) => [
         <a
           key="config"
@@ -135,40 +136,13 @@ const TableList: React.FC = () => {
         }}
         request={pageList}
         columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
-        }}
+        // rowSelection={{
+        //   onChange: (_, selectedRows) => {
+        //     setSelectedRows(selectedRows);
+        //   },
+        // }}
         scroll={{ x: 1200 }}
       />
-      {selectedRowsState?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              已选择{' '}
-              <a
-                style={{
-                  fontWeight: 600,
-                }}
-              >
-                {selectedRowsState.length}
-              </a>{' '}
-              项 &nbsp;&nbsp;
-            </div>
-          }
-        >
-          <Button
-            type="primary"
-            onClick={async () => {
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量分配
-          </Button>
-        </FooterToolbar>
-      )}
       <UpdateForm
         onSubmit={async (value) => {
           const success = await handleUpdate(value, currentRow);

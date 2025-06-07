@@ -36,12 +36,10 @@ const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) =
 };
 
 const TableList: React.FC = () => {
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<TableListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
 
   const columns: ProColumns<TableListItem>[] = [
     {

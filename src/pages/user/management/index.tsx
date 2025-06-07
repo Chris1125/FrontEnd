@@ -1,12 +1,8 @@
-import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
-import {
-  PageContainer,
-  ProDescriptions,
-  ProTable,
-} from '@ant-design/pro-components';
-import { Button, Drawer, message } from 'antd';
+import { PageContainer, ProDescriptions, ProTable } from '@ant-design/pro-components';
+import { Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
+import CreateForm from './components/CreateForm';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
 import type { TableListItem, TableListPagination } from './data';
@@ -36,8 +32,6 @@ const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) =
 };
 
 const TableList: React.FC = () => {
-  /** 新建窗口的弹窗 */
-  const [handleModalVisible] = useState<boolean>(false);
   /** 分布更新窗口的弹窗 */
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
@@ -48,31 +42,23 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<TableListItem>[] = [
     {
-      title: '订单编号',
-      dataIndex: 'orderNo',
-      hideInTable: true,
-      search: false,
-      render: (dom, entity) => {
-        return (
-          <a
-            onClick={() => {
-              // setCurrentRow(entity);
-              // setShowDetail(true);
-            }}
-          >
-            {dom}
-          </a>
-        );
-      },
-    },
-    {
       title: '登录账号',
-      dataIndex: 'account',
+      dataIndex: 'username',
       sorter: true,
     },
     {
       title: '用户名称',
-      dataIndex: 'userName',
+      dataIndex: 'name',
+      valueType: 'text',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      valueType: 'text',
+    },
+    {
+      title: '修改时间',
+      dataIndex: 'updateTime',
       valueType: 'text',
     },
     {
@@ -116,35 +102,25 @@ const TableList: React.FC = () => {
         ),
       ],
     },
-  ]
+  ];
 
   return (
     <PageContainer>
       <ProTable<TableListItem, TableListPagination>
-        headerTitle="查询表格"
+        headerTitle=""
         actionRef={actionRef}
         rowKey="key"
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              // handleModalVisible(true);
-            }}
-          >
-            <PlusOutlined /> 新建
-          </Button>,
-        ]}
+        toolBarRender={() => [<CreateForm key="create" reload={actionRef.current?.reload} />]}
         request={pageList}
         columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
-        }}
+        // rowSelection={{
+        //   onChange: (_, selectedRows) => {
+        //     setSelectedRows(selectedRows);
+        //   },
+        // }}
       />
       <UpdateForm
         onSubmit={async (value) => {
